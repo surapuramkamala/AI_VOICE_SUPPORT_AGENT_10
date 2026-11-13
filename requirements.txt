@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+python-dotenv
+openai
+groq
+edge-tts
+python-multipart
+httpx
+pytest
+psycopg[binary]>=3.2.0

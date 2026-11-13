@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Support Agent</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #202938;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 24px;
+            margin: 18px 0;
+            border-radius: 14px;
+            border: 1px solid #e0e6ef;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 19px;
+        }
+
+        .muted {
+            color: #64748b;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: normal;
+        }
+
+        .options input {
+            width: auto;
+        }
+
+        button {
+            border: 0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            background: #2563eb;
+            color: white;
+        }
+
+        button.secondary {
+            background: #475569;
+        }
+
+        button.stop {
+            background: #b91c1c;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px;
+            min-height: 48px;
+        }
+
+        #status {
+            font-weight: 600;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .small {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>AI Voice Support Agent</h1>
+        <p class="muted">
+            Ask about your orders or refunds using your voice or text.
+        </p>
+
+        <section class="panel">
+            <h2>Sign in</h2>
+            <p class="muted small">Sign in with an account provisioned by the application administrator. Customer IDs
+                are derived from your authenticated account.</p>
+            <form id="loginForm">
+                <label for="loginEmail">Email</label>
+                <input id="loginEmail" type="email" autocomplete="username" required maxlength="255">
+                <label for="loginPassword">Password</label>
+                <input id="loginPassword" type="password" autocomplete="current-password" required maxlength="256">
+                <button id="loginButton" type="submit">Sign in</button>
+                <button id="logoutButton" type="button" class="secondary" hidden>Sign out</button>
+            </form>
+            <p id="authStatus" class="muted small" role="status" aria-live="polite">Not signed in</p>
+
+            <h2>Session settings</h2>
+            <label for="sessionId">Session ID</label>
+            <input id="sessionId" value="voice-session-001" maxlength="100">
+
+            <div class="options">
+                <label>
+                    <input id="enableTranscription" type="checkbox" checked>
+                    Transcribe microphone audio using Whisper
+                </label>
+
+                <label>
+                    <input id="enableSpeech" type="checkbox" checked>
+                    Speak the agent's response using Edge TTS
+                </label>
+            </div>
+
+            <label for="voice">Response voice</label>
+            <select id="voice">
+                <option value="en-US-AriaNeural">English — Aria</option>
+                <option value="en-IN-NeerjaNeural">Indian English — Neerja</option>
+                <option value="en-IN-PrabhatNeural">Indian English — Prabhat</option>
+            </select>
+
+            <p id="status" role="status" aria-live="polite">
+                Ready
+            </p>
+        </section>
+
+        <section class="panel">
+            <h2>Option A: Speak to the agent</h2>
+            <p class="muted small">
+                Allow microphone access when your browser asks.
+                Recording is submitted when you stop.
+            </p>
+
+            <button id="startRecording">Start recording</button>
+            <button id="stopRecording" class="stop" disabled>
+                Stop recording and send
+            </button>
+        </section>
+
+        <section class="panel">
+            <h2>Option B: Type your question</h2>
+
+            <form id="textForm">
+                <label for="message">Your question</label>
+                <textarea id="message" maxlength="8000" placeholder="Example: Where is my order?"></textarea>
+
+                <button id="sendText" type="submit">Send message</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Recognized transcript</h2>
+            <div id="transcript" class="result">No transcript yet.</div>
+
+            <h2>Agent response</h2>
+            <div id="answer" class="result">Your answer will appear here.</div>
+
+            <h2>Voice response</h2>
+            <audio id="audioPlayer" controls></audio>
+            <p class="muted small">
+                If playback does not start automatically, press Play.
+            </p>
+        </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
